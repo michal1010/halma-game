@@ -99,7 +99,7 @@ class Board:
     def _normal_move(self, counter_coords, move_coords) -> None:
         '''
         Move for a one space; Move that is not a jump
-        counter_coords - touple (x, y);
+        counter_coords - tuple (x, y);
         directories of the counter, that should be moved
         move_coords - touple (x, y);
         directories to which the counter should be moved
@@ -133,7 +133,7 @@ class Board:
         xc, yc = counter_coords
         range_coords = [
             (xc-2, yc-2), (xc, yc-2), (xc+2, yc-2),
-            (xc+2, yc), (xc+2, yc+2), (xc, yc-2),
+            (xc+2, yc), (xc+2, yc+2), (xc, yc+2),
             (xc-2, yc+2)
         ]
         return range_coords
