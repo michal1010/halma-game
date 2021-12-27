@@ -108,6 +108,7 @@ class Board:
         xm, ym = move_coords
         self._board[ym][xm] = self._board[yc][xc]
         self._board[yc][xc] = 'o'
+        self._change_moving_player()
 
     def _normal_move_range(self, i):
         'Returns range within coordintes can change during normal move'
@@ -125,6 +126,7 @@ class Board:
         xm, ym = move_coords
         self._board[ym][xm] = self._board[yc][xc]
         self._board[yc][xc] = 'o'
+        self._change_moving_player()
 
     def _jump_move_range(self, counter_coords):
         'Returns range within coordintes can change during jump move'
@@ -146,6 +148,12 @@ class Board:
         yb = (yc + ym)//2
         if self._board[yb][xb] == 'o':
             raise InvalidMoveError('There is no counter to jump above')
+
+    def _change_moving_player(self):
+        if self._moving_player == 'b':
+            self._moving_player = 'w'
+        else:
+            self._moving_player = 'b'
 
     def who_starts_the_play(self) -> str:
         'It draw at the begining of the game which player should move first.'
