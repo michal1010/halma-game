@@ -1,6 +1,6 @@
 from aplication_logic import (
-    Board, IndexOutOfBoardEroor, InvalidCounterCoord,
-    InvalidJumpMove, NotMovedError, InvalidNormalMove
+    AnotherCounterOnTheSquareError, Board, IndexOutOfBoardError, InvalidCounterCoord,
+    NotMovedError, InvalidMoveError
 )
 from constants import (
     BLACK_WON_EXAMPLE, BOARD_AFTER_JUMP_MOVE, BOARD_AFTER_NORMAL_MOVE,
@@ -34,7 +34,7 @@ def test_who_is_the_winnerW():
     winner = board.who_is_the_winner()
     assert winner == 'white'
 
-# -------------------------------- NORMAL_MOVE TEST ----------------------------
+# -------------------------------- NORMAL_MOVE TEST ---------------------------
 
 
 def test_normal_move_valid():
@@ -42,7 +42,7 @@ def test_normal_move_valid():
     board._moving_player = 'b'
     counter_coord = (0, 4)
     move_coord = (1, 5)
-    board.normal_move(counter_coord, move_coord)
+    board.move(counter_coord, move_coord)
     assert board.board() == BOARD_AFTER_NORMAL_MOVE
 
 
@@ -52,7 +52,7 @@ def test_normal_move_not_moved():
     counter_coord = (0, 4)
     move_coord = (0, 4)
     with pytest.raises(NotMovedError):
-        board.normal_move(counter_coord, move_coord)
+        board.move(counter_coord, move_coord)
 
 
 def test_normal_move_not_in_range():
@@ -60,8 +60,8 @@ def test_normal_move_not_in_range():
     board._moving_player = 'b'
     counter_coord = (0, 4)
     move_coord = (4, 5)
-    with pytest.raises(InvalidNormalMove):
-        board.normal_move(counter_coord, move_coord)
+    with pytest.raises(InvalidMoveError):
+        board.move(counter_coord, move_coord)
 
 
 def test_normal_move_another_counter_on_the_square():
@@ -69,8 +69,8 @@ def test_normal_move_another_counter_on_the_square():
     board._moving_player = 'b'
     counter_coord = (0, 4)
     move_coord = (0, 3)
-    with pytest.raises(InvalidNormalMove):
-        board.normal_move(counter_coord, move_coord)
+    with pytest.raises(AnotherCounterOnTheSquareError):
+        board.move(counter_coord, move_coord)
 
 
 def test_normal_move_out_of_board_plus_coord():
@@ -78,8 +78,8 @@ def test_normal_move_out_of_board_plus_coord():
     board._moving_player = 'w'
     counter_coord = (15, 15)
     move_coord = (16, 15)
-    with pytest.raises(IndexOutOfBoardEroor):
-        board.normal_move(counter_coord, move_coord)
+    with pytest.raises(IndexOutOfBoardError):
+        board.move(counter_coord, move_coord)
 
 
 def test_normal_move_out_of_board_minus_coord():
@@ -87,8 +87,8 @@ def test_normal_move_out_of_board_minus_coord():
     board._moving_player = 'b'
     counter_coord = (0, 4)
     move_coord = (-1, 4)
-    with pytest.raises(IndexOutOfBoardEroor):
-        board.normal_move(counter_coord, move_coord)
+    with pytest.raises(IndexOutOfBoardError):
+        board.move(counter_coord, move_coord)
 
 
 def test_counter_is_of_pointed_square_normal_move():
@@ -97,10 +97,10 @@ def test_counter_is_of_pointed_square_normal_move():
     counter_coord = (0, 10)
     move_coord = (0, 11)
     with pytest.raises(InvalidCounterCoord):
-        board.normal_move(counter_coord, move_coord)
+        board.move(counter_coord, move_coord)
 
 
-# ------------------------- JUMP_MOVE TEST -------------------------------------
+# ------------------------- JUMP_MOVE TEST ------------------------------------
 
 
 def test_jump_move_valid():
@@ -108,7 +108,7 @@ def test_jump_move_valid():
     board._moving_player = 'b'
     counter_coord = (0, 3)
     move_coord = (2, 5)
-    board.jump_move(counter_coord, move_coord)
+    board.move(counter_coord, move_coord)
     assert board.board() == BOARD_AFTER_JUMP_MOVE
 
 
@@ -118,7 +118,7 @@ def test_jump_move_not_moved():
     counter_coord = (0, 4)
     move_coord = (0, 4)
     with pytest.raises(NotMovedError):
-        board.jump_move(counter_coord, move_coord)
+        board.move(counter_coord, move_coord)
 
 
 def test_jump_move_not_in_range():
@@ -126,16 +126,16 @@ def test_jump_move_not_in_range():
     board._moving_player = 'b'
     counter_coord = (0, 4)
     move_coord = (4, 5)
-    with pytest.raises(InvalidJumpMove):
-        board.jump_move(counter_coord, move_coord)
+    with pytest.raises(InvalidMoveError):
+        board.move(counter_coord, move_coord)
     counter_coord = (0, 3)
-    move_coord = (1, 4)
-    with pytest.raises(InvalidJumpMove):
-        board.jump_move(counter_coord, move_coord)
+    move_coord = (1, 5)
+    with pytest.raises(InvalidMoveError):
+        board.move(counter_coord, move_coord)
     counter_coord = (0, 3)
     move_coord = (3, 4)
-    with pytest.raises(InvalidJumpMove):
-        board.jump_move(counter_coord, move_coord)
+    with pytest.raises(InvalidMoveError):
+        board.move(counter_coord, move_coord)
 
 
 def test_jump_move_another_counter_on_the_square():
@@ -143,8 +143,8 @@ def test_jump_move_another_counter_on_the_square():
     board._moving_player = 'b'
     counter_coord = (0, 2)
     move_coord = (0, 4)
-    with pytest.raises(InvalidJumpMove):
-        board.jump_move(counter_coord, move_coord)
+    with pytest.raises(AnotherCounterOnTheSquareError):
+        board.move(counter_coord, move_coord)
 
 
 def test_jump_move_out_of_board_plus_coord():
@@ -152,8 +152,8 @@ def test_jump_move_out_of_board_plus_coord():
     board._moving_player = 'w'
     counter_coord = (15, 15)
     move_coord = (17, 15)
-    with pytest.raises(IndexOutOfBoardEroor):
-        board.jump_move(counter_coord, move_coord)
+    with pytest.raises(IndexOutOfBoardError):
+        board.move(counter_coord, move_coord)
 
 
 def test_jump_move_out_of_board_minus_coord():
@@ -161,14 +161,14 @@ def test_jump_move_out_of_board_minus_coord():
     board._moving_player = 'b'
     counter_coord = (0, 4)
     move_coord = (-2, 4)
-    with pytest.raises(IndexOutOfBoardEroor):
-        board.jump_move(counter_coord, move_coord)
+    with pytest.raises(IndexOutOfBoardError):
+        board.move(counter_coord, move_coord)
 
 
-def test_counter_is_of_pointed_square_jump_move():
+def test_counter_is_of_pointed_square_move():
     board = Board()
     board._moving_player = 'b'
     counter_coord = (0, 10)
     move_coord = (0, 11)
     with pytest.raises(InvalidCounterCoord):
-        board.normal_move(counter_coord, move_coord)
+        board.move(counter_coord, move_coord)
