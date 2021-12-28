@@ -128,54 +128,50 @@ class Board:
 
         # Cheking all the options of jump_move for the counter
         if (
-            board[yc-1][xc-1] != 'o' and board[yc-2][xc-2] == 'o'
-            and xc-2 > -1 and yc-2 > -1 and
-            (xc-2, yc-2) != last_counter_coords
+            xc-2 > -1 and yc-2 > -1 and board[yc-1][xc-1] != 'o' and
+            board[yc-2][xc-2] == 'o' and (xc-2, yc-2) != last_counter_coords
         ):
             self._jump_move_validation((xc-2, yc-2), move_coords,
                                        counter_coords)
         if (
-            board[yc-1][xc] != 'o' and board[yc-2][xc] == 'o'
-            and yc-2 > -1 and (xc, yc-2) != last_counter_coords
+            yc-2 > -1 and board[yc-1][xc] != 'o' and board[yc-2][xc] == 'o'
+            and (xc, yc-2) != last_counter_coords
         ):
             self._jump_move_validation((xc, yc-2), move_coords,
                                        counter_coords)
         if (
-            board[yc-1][xc+1] != 'o' and board[yc-2][xc+2] == 'o'
-            and yc - 2 > -1 and xc+2 < 16 and
-            (xc+2, yc-2) != last_counter_coords
+            yc-2 > -1 and xc+2 < 16 and board[yc-1][xc+1] != 'o' and
+            board[yc-2][xc+2] == 'o' and (xc+2, yc-2) != last_counter_coords
         ):
             self._jump_move_validation((xc+2, yc-2), move_coords,
                                        counter_coords)
         if (
-            board[yc][xc+1] != 'o' and board[yc][xc+2] == 'o'
-            and xc+2 < 16 and (xc+2, yc) != last_counter_coords
+            xc+2 < 16 and board[yc][xc+1] != 'o' and board[yc][xc+2] == 'o'
+            and (xc+2, yc) != last_counter_coords
         ):
             self._jump_move_validation((xc+2, yc), move_coords,
                                        counter_coords)
         if (
-            board[yc+1][xc+1] != 'o' and board[yc+2][xc+2] == 'o'
-            and xc+2 < 16 and yc+2 < 16 and
-            (xc+2, yc+2) != last_counter_coords
+            xc+2 < 16 and yc+2 < 16 and board[yc+1][xc+1] != 'o' and
+            board[yc+2][xc+2] == 'o' and (xc+2, yc+2) != last_counter_coords
         ):
             self._jump_move_validation((xc+2, yc+2), move_coords,
                                        counter_coords)
         if (
-            board[yc+1][xc] != 'o' and board[yc+2][xc] == 'o'
-            and yc+2 < 16 and (xc, yc+2) != last_counter_coords
+            yc+2 < 16 and board[yc+1][xc] != 'o' and board[yc+2][xc] == 'o'
+            and (xc, yc+2) != last_counter_coords
         ):
             self._jump_move_validation((xc, yc+2), move_coords,
                                        counter_coords)
         if (
-            board[yc+1][xc-1] != 'o' and board[yc+2][xc-2] == 'o'
-            and xc-2 > -1 and yc+2 < 16 and
-            (xc-2, yc+2) != last_counter_coords
+            xc-2 > -1 and yc+2 < 16 and board[yc+1][xc-1] != 'o' and
+            board[yc+2][xc-2] == 'o' and (xc-2, yc+2) != last_counter_coords
         ):
             self._jump_move_validation((xc-2, yc+2), move_coords,
                                        counter_coords)
         if (
-            board[yc][xc-1] != 'o' and board[yc][xc-2] == 'o'
-            and xc-2 < 16 and (xc-2, yc) != last_counter_coords
+            xc-2 < 16 and board[yc][xc-1] != 'o' and board[yc][xc-2] == 'o'
+            and (xc-2, yc) != last_counter_coords
         ):
             self._jump_move_validation((xc-2, yc), move_coords,
                                        counter_coords)
