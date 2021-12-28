@@ -49,11 +49,74 @@ class Board:
         move = self._which_move_is_it(counter_coords, move_coords)
         if move == '_normal_move':
             self._normal_move(counter_coords, move_coords)
+        elif move == '_combo_jump_move':
+            # auxiliary variable for recursive function
+            self._combo_move_is_valid = False
+            self._combo_jump_move(counter_coords, move_coords)
         elif move == '_jump_move':
             self._jump_move(counter_coords, move_coords)
+            # info = 'Your move_coords are not in allowable range.'
+            # raise InvalidMoveError(info)
+
+    def _combo_jump_move(self, counter_coords, move_coords):
+        self._combo_moving(counter_coords, move_coords)
+        if self._combo_move_is_valid:
+            self._jump_move(counter_coords, move_coords)
         else:
-            info = 'Your move_coords are not in allowable range.'
-            raise InvalidMoveError(info)
+            raise InvalidMoveError('You can not move to this square.')
+
+    def _combo_moving(self, counter_coords,
+                      move_coords, last_counter_coords=None):
+        xc, yc = counter_coords
+        board = self._board
+
+        if counter_coords == move_coords:
+            self._combo_move_is_valid = True
+            return True
+        if (
+            board[yc-1][xc-1] != 'o' and board[yc-2][xc-2] == 'o'
+            and xc-2 > -1 and yc-2 > -1 and
+            (xc-2, yc-2) != last_counter_coords
+        ):
+            self._combo_moving((xc-2, yc-2), move_coords, counter_coords)
+        if (
+            board[yc-1][xc] != 'o' and board[yc-2][xc] == 'o'
+            and yc-2 > -1 and (xc, yc-2) != last_counter_coords
+        ):
+            self._combo_moving((xc, yc-2), move_coords, counter_coords)
+        if (
+            board[yc-1][xc+1] != 'o' and board[yc-2][xc+2] == 'o'
+            and yc - 2 > -1 and xc+2 < 16 and
+            (xc+2, yc-2) != last_counter_coords
+        ):
+            self._combo_moving((xc+2, yc-2), move_coords, counter_coords)
+        if (
+            board[yc][xc+1] != 'o' and board[yc][xc+2] == 'o'
+            and xc+2 < 16 and (xc+2, yc) != last_counter_coords
+        ):
+            self._combo_moving((xc+2, yc), move_coords, counter_coords)
+        if (
+            board[yc+1][xc+1] != 'o' and board[yc+2][xc+2] == 'o'
+            and xc+2 < 16 and yc+2 < 16 and
+            (xc+2, yc+2) != last_counter_coords
+        ):
+            self._combo_moving((xc+2, yc+2), move_coords, counter_coords)
+        if (
+            board[yc+1][xc] != 'o' and board[yc+2][xc] == 'o'
+            and yc+2 < 16 and (xc, yc+2) != last_counter_coords
+        ):
+            self._combo_moving((xc, yc+2), move_coords, counter_coords)
+        if (
+            board[yc+1][xc-1] != 'o' and board[yc+2][xc-2] == 'o'
+            and xc-2 > -1 and yc+2 < 16 and
+            (xc-2, yc+2) != last_counter_coords
+        ):
+            self._combo_moving((xc-2, yc+2), move_coords, counter_coords)
+        if (
+            board[yc][xc-1] != 'o' and board[yc][xc-2] == 'o'
+            and xc-2 < 16 and (xc-2, yc) != last_counter_coords
+        ):
+            self._combo_moving((xc-2, yc), move_coords, counter_coords)
 
     def _which_move_is_it(self, counter_coords, move_coords):
         'Cheks if which move the player wants to make.'
@@ -62,12 +125,13 @@ class Board:
         range_x = self._normal_move_range(xc)
         range_y = self._normal_move_range(yc)
         jump_range = self._jump_move_range(counter_coords)
+        jump_move_validation = self._jump_move_is_valid(counter_coords, move_coords)
         if xm in range_x and ym in range_y:
             return '_normal_move'
-        elif move_coords in jump_range:
+        elif move_coords in jump_range and jump_move_validation:
             return '_jump_move'
         else:
-            return None
+            return '_combo_jump_move'
 
     def _move_is_valid(self, counter_coords, move_coords):
         'Cheks if move over all is valid'
@@ -83,10 +147,10 @@ class Board:
             raise IndexOutOfBoardError('Given coords are invalid.')
 
         # Checking if we are moving the counter
-        elif xc == xm and yc == ym:
+        if xc == xm and yc == ym:
             raise NotMovedError('You have not moved')
 
-        # Checking if our counter is on pointed square
+        # Checking if our counter is on the pointed square
         elif self._board[yc][xc] != self._moving_player:
             info = 'Your counter is not on the pointed square'
             raise InvalidCounterCoord(info)
@@ -147,7 +211,9 @@ class Board:
         xb = (xc + xm)//2
         yb = (yc + ym)//2
         if self._board[yb][xb] == 'o':
-            raise InvalidMoveError('There is no counter to jump above')
+            return False
+        else:
+            return True
 
     def _change_moving_player(self):
         if self._moving_player == 'b':

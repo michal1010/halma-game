@@ -1,10 +1,11 @@
 from aplication_logic import (
-    AnotherCounterOnTheSquareError, Board, IndexOutOfBoardError, InvalidCounterCoord,
-    NotMovedError, InvalidMoveError
+    AnotherCounterOnTheSquareError, Board, IndexOutOfBoardError,
+    InvalidCounterCoord, NotMovedError, InvalidMoveError
 )
 from constants import (
-    BLACK_WON_EXAMPLE, BOARD_AFTER_JUMP_MOVE, BOARD_AFTER_NORMAL_MOVE,
-    WHITE_WON_EXAMPLE,
+    BLACK_WON_EXAMPLE, BOARD_AFTER_COMBO_JUMP_MOVE1, BOARD_AFTER_JUMP_MOVE,
+    BOARD_AFTER_NORMAL_MOVE, WHITE_WON_EXAMPLE, BOARD_AFTER_COMBO_JUMP_MOVE2,
+    BOARD_AFTER_COMBO_JUMP_MOVE3
 )
 import pytest
 
@@ -172,3 +173,27 @@ def test_counter_is_of_pointed_square_move():
     move_coord = (0, 11)
     with pytest.raises(InvalidCounterCoord):
         board.move(counter_coord, move_coord)
+
+
+def test_combo_jump_move_valid():
+    board = Board()
+    board._moving_player = 'b'
+    counter_coord = (0, 3)
+    move_coord = (2, 5)
+    board.move(counter_coord, move_coord)
+    assert board.board() == BOARD_AFTER_JUMP_MOVE
+    counter_coord = (1, 3)
+    move_coord = (3, 5)
+    board._moving_player = 'b'
+    board.move(counter_coord, move_coord)
+    assert board.board() == BOARD_AFTER_COMBO_JUMP_MOVE1
+    counter_coord = (0, 4)
+    move_coord = (4, 4)
+    board._moving_player = 'b'
+    board.move(counter_coord, move_coord)
+    assert board.board() == BOARD_AFTER_COMBO_JUMP_MOVE2
+    counter_coord = (1, 4)
+    move_coord = (5, 4)
+    board._moving_player = 'b'
+    board.move(counter_coord, move_coord)
+    assert board.board() == BOARD_AFTER_COMBO_JUMP_MOVE3
