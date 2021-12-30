@@ -32,6 +32,8 @@ class Board:
         self._moving_player = self.who_starts_the_play()
         # I am not sure if it is the best solution
         self._board = copy.deepcopy(BOARD_START)
+        self._moves_made = 0
+        self._turn_number = 0
 
     def moving_player(self):
         'Gives information which player turn is now b - black, w - white'
@@ -52,6 +54,8 @@ class Board:
             self._normal_move(counter_coords, move_coords)
         elif move == '_jump_move':
             self._jump_move(counter_coords, move_coords)
+        self._moves_made += 1
+        self._turn_number = self._moves_made // 2
 
     def _which_move_is_it(self, counter_coords, move_coords):
         'Cheks if which move the player wants to make.'
