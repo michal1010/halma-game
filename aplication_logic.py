@@ -35,6 +35,9 @@ class Board:
         self._moves_made = 0
         self._turn_number = 0
 
+    def turn_number(self):
+        return self._turn_number
+
     def moving_player(self):
         'Gives information which player turn is now b - black, w - white'
         return self._moving_player
