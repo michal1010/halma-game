@@ -177,7 +177,7 @@ class Board:
             self._jump_move_validation((xc-2, yc+2), move_coords,
                                        counter_coords)
         if (
-            xc-2 < 16 and board[yc][xc-1] != 'o' and board[yc][xc-2] == 'o'
+            xc-2 > -1 and board[yc][xc-1] != 'o' and board[yc][xc-2] == 'o'
             and (xc-2, yc) != last_counter_coords
         ):
             self._jump_move_validation((xc-2, yc), move_coords,
