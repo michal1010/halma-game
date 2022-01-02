@@ -77,6 +77,7 @@ def moves_distances(board: Board, color):
     '''
     black_coords, white_coords = finding_counters(board)
     board = board.board()
+    distance = []
     def jump_move_distances(counter_coords, distances,
                             last_counter_coords=None):
         '''
@@ -85,7 +86,7 @@ def moves_distances(board: Board, color):
         '''
         xc, yc = counter_coords
         if last_counter_coords is not None:
-            distances.append(distance_made(last_counter_coords, counter_coords))
+            distance.append(distance_made(last_counter_coords, counter_coords))
 
         # Cheking all the options of jump_move for the counter
         if (
@@ -128,6 +129,9 @@ def moves_distances(board: Board, color):
             and (xc-2, yc) != last_counter_coords
         ):
             jump_move_distances((xc-2, yc), distances, counter_coords)
+        if last_counter_coords is not None and sum(distance) != 0:
+            distances.append(sum(distance))
+        distance.clear()
 
     if color == 'black':
         color_coords = black_coords

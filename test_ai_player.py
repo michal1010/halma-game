@@ -83,3 +83,16 @@ def test_moves_distances():
                     (1, 3): [2.0, 2.0], (2, 3): [2.8], (0, 4): [2.0],
                     (1, 4): []}
     assert color_coords == moves_distances(board, 'black')
+
+
+def test_moves_distances_combo_jump_move():
+    board = Board()
+    # color_coords = {(0, 0): [], (1, 0): [], (2, 0): [2.8],
+    #                 (3, 0): [2.0, 2.8], (4, 0): [2.0], (0, 1): [],
+    #                 (1, 1): [2.8], (2, 1): [2.8], (3, 1): [2.0, 2.0],
+    #                 (4, 1): [], (0, 2): [2.8], (1, 2): [2.8],
+    #                 (2, 2): [2.0, 2.0], (3, 2): [2.8], (0, 3): [2.8, 2.0],
+    #                 (1, 3): [2.0, 2.0], (2, 3): [2.8], (0, 4): [2.0],
+    #                 (1, 4): []}
+    board._board = BOARD_AFTER_COMBO_JUMP_MOVE3
+    color_coords = moves_distances(board, 'black')
