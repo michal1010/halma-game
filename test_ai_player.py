@@ -1,5 +1,5 @@
 from ai_player import (
-    ai_turn, begining, finding_counters, right_direction,
+    ai_turn, begining, finding_counters, moves_distances, right_direction,
     move, distance_made
 )
 from aplication_logic import Board
@@ -71,3 +71,15 @@ def test_finding_counters():
                      (15, 15): []}
     assert black_coords2 == black_coords
     assert white_coords2 == white_coords
+
+
+def test_moves_distances():
+    board = Board()
+    color_coords = {(0, 0): [], (1, 0): [], (2, 0): [2.8],
+                    (3, 0): [2.0, 2.8], (4, 0): [2.0], (0, 1): [],
+                    (1, 1): [2.8], (2, 1): [2.8], (3, 1): [2.0, 2.0],
+                    (4, 1): [], (0, 2): [2.8], (1, 2): [2.8],
+                    (2, 2): [2.0, 2.0], (3, 2): [2.8], (0, 3): [2.8, 2.0],
+                    (1, 3): [2.0, 2.0], (2, 3): [2.8], (0, 4): [2.0],
+                    (1, 4): []}
+    assert color_coords == moves_distances(board, 'black')
