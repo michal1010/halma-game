@@ -29,11 +29,11 @@ def test_right_direction_player_b():
     board._moving_player = 'b'
     counter_coords = (5, 7)
     move_coords = (4, 6)
-    direction = right_direction(board, counter_coords, move_coords)
+    direction = right_direction(board, counter_coords, move_coords, 'black')
     assert direction == 'wrong direction'
     counter_coords = (5, 7)
     move_coords = (5, 8)
-    direction = right_direction(board, counter_coords, move_coords)
+    direction = right_direction(board, counter_coords, move_coords, 'black')
     assert direction == 'right direction'
 
 
@@ -42,11 +42,11 @@ def test_right_direction_player_w():
     board._moving_player = 'w'
     counter_coords = (5, 7)
     move_coords = (4, 6)
-    direction = right_direction(board, counter_coords, move_coords)
+    direction = right_direction(board, counter_coords, move_coords, 'white')
     assert direction == 'right direction'
     counter_coords = (5, 7)
     move_coords = (5, 8)
-    direction = right_direction(board, counter_coords, move_coords)
+    direction = right_direction(board, counter_coords, move_coords, 'white')
     assert direction == 'wrong direction'
 
 # ------------------------------- MOVE FUNCTIONS TESTS -------------------
@@ -72,6 +72,7 @@ def test_finding_counters():
     assert black_coords2 == black_coords
     assert white_coords2 == white_coords
 
+
 def test_moves_distances_standard():
     board = Board()
     color_coords = {(0, 0): [0], (1, 0): [0], (2, 0): [2.8],
@@ -95,3 +96,4 @@ def test_moves_distances_combo_jump_move():
     #                 (1, 4): []}
     board._board = BOARD_AFTER_COMBO_JUMP_MOVE3
     color_coords = moves_distances(board, 'black')
+    pass
