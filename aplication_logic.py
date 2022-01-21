@@ -39,7 +39,7 @@ class Board:
         return self._turn_number
 
     def moving_player(self):
-        'Gives information which player turn is now b - black, w - white'
+        'Gives information which player turn is now black or white'
         return self._moving_player
 
     def board(self):
@@ -76,7 +76,7 @@ class Board:
         xc, yc = counter_coords
         xm, ym = move_coords
         board_range = range(0, 16)
-
+        player_counter = 'b' if self._moving_player == 'black' else 'w'
         # Cheking if given coords are in range.
         if (
             xc not in board_range or yc not in board_range or
@@ -89,7 +89,8 @@ class Board:
             raise NotMovedError('You have not moved')
 
         # Checking if our counter is on the pointed square
-        elif self._board[yc][xc] != self._moving_player:
+
+        elif self._board[yc][xc] != player_counter:
             info = 'Your counter is not on the pointed square'
             raise InvalidCounterCoord(info)
 
@@ -202,14 +203,14 @@ class Board:
         return range(i-1, i+2)
 
     def _change_moving_player(self):
-        if self._moving_player == 'b':
-            self._moving_player = 'w'
+        if self._moving_player == 'black':
+            self._moving_player = 'white'
         else:
-            self._moving_player = 'b'
+            self._moving_player = 'black'
 
     def who_starts_the_play(self) -> str:
         'It draw at the begining of the game which player should move first.'
-        posibilities = ('w', 'b')
+        posibilities = ('white', 'black')
         first_player = choice(posibilities)
         return first_player
 
