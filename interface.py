@@ -25,7 +25,7 @@ def taking_user_coords():
     return counter_coords, move_coords
 
 
-def end_of_the_game(board: Board):
+def end_of_the_game(board: Board, player1_color):
     if board.who_is_the_winner() is not None:
         winner_color = board.who_is_the_winner()
         winner = 'Player1' if winner_color == player1_color else 'Player2'
@@ -65,7 +65,7 @@ def main():
         except InvalidMoveError:
             print('Your move is invalid.\nTry again.')
             continue
-        end_of_the_game(board)
+        end_of_the_game(board, player1_color)
 
 
 def print_the_board(board: Board):
