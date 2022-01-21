@@ -5,34 +5,49 @@ from aplication_logic import (
 )
 
 
-def main():
-    board = Board()
-    board.who_starts_the_play()
-    player1_color_letter = board.moving_player()
-    player2_color_letter = 'w' if player1_color_letter == 'b' else 'b'
-    player1_color = 'white' if player1_color_letter == 'w' else 'black'
-    player2_color = 'white' if player2_color_letter == 'w' else 'black'
+def beggining_prints(player1_color, player2_color):
     print(f'Player1 has color {player1_color}', '')
     print(f'Player2 has color {player2_color}', '')
     print('Player1 starts the play.')
+
+
+def taking_user_coords():
+    try:
+        xc = int(input('Enter the first coord:\t'))
+        yc = int(input('Enter the second coord:\t'))
+        print('Enter coords of place where you want to move your counter.')
+        xm = int(input('Enter the first coord:\t'))
+        ym = int(input('Enter the second coord:\t'))
+    except ValueError:
+        print('Coord must be an integer nubmer. Try again\t')
+    counter_coords = (xc, yc)
+    move_coords = (xm, ym)
+    return counter_coords, move_coords
+
+
+def end_of_the_game(board: Board):
+    if board.who_is_the_winner() is not None:
+        winner_color = board.who_is_the_winner()
+        winner = 'Player1' if winner_color == player1_color else 'Player2'
+        print(f'{winner} has won the game.')
+
+
+def main():
+    board = Board()
+    board.who_starts_the_play()
+
+    player1_color = board.moving_player()
+    player2_color = 'white' if player1_color == 'black' else 'white'
+    beggining_prints(player1_color, player2_color)
     while True:
-        if board.moving_player() == player1_color_letter:
+        if board.moving_player() == player1_color:
             player = 'Player1'
         else:
             player = 'Player2'
         print(f'{player} turn')
         print_the_board(board)
-        print('Enter coords of counter that your want to move.')
-        try:
-            xc = int(input('Enter the first coord:\t'))
-            yc = int(input('Enter the second coord:\t'))
-            print('Enter coords of place where you want to move your counter.')
-            xm = int(input('Enter the first coord:\t'))
-            ym = int(input('Enter the second coord:\t'))
-        except ValueError:
-            print('Coord must be an integer nubmer. Try again\t')
-        counter_coords = (xc, yc)
-        move_coords = (xm, ym)
+        print('Enter coords of the counter that your want to move.')
+        counter_coords, move_coords = taking_user_coords()
         try:
             board.move(counter_coords, move_coords)
         except InvalidCounterCoord:
@@ -50,10 +65,7 @@ def main():
         except InvalidMoveError:
             print('Your move is invalid.\nTry again.')
             continue
-        if board.who_is_the_winner() is not None:
-            winner_color = board.who_is_the_winner()
-            winner = 'Player1' if winner_color == player1_color else 'Player2'
-            print(f'{winner} has won the game.')
+        end_of_the_game(board)
 
 
 def print_the_board(board: Board):
