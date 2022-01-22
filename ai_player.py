@@ -9,7 +9,7 @@ def ai_turn(board: Board):
     Make ai turn during the game.
     '''
     # if board.turn_number() <= 8:
-    #     begining(board)
+    #     beggining(board)
     # else:
     move(board)
 
