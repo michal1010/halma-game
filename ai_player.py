@@ -1,3 +1,4 @@
+from tkinter import N
 from aplication_logic import Board
 from math import sqrt
 import copy
@@ -13,7 +14,7 @@ def ai_turn(board: Board):
     move(board)
 
 
-def begining(board: Board):
+def beggining(board: Board):
     '''
     Function makes set of moves on the board
     that are the best to do on the begining of the game.
@@ -49,7 +50,7 @@ def move(board: Board):
     '''
     Makes the best possible move after the beginig faze of the game.
     '''
-    counter_moves = jump_move_distances(board)
+    counter_moves = move_distance(board)
     counter_moves_max = max_distances(counter_moves)
     counter_coords, move_coords = the_best_move(counter_moves_max)
     board.move(counter_coords, move_coords)
@@ -97,47 +98,60 @@ def normal_move_distances(board: Board, distances_coords: dict):
     distances_coords_full = copy.deepcopy(distances_coords)
     for counter_coords, moves_values in distances_coords.items():
         if moves_values == {}:
-            distances_coords_full[counter_coords] = possible_normal_moves(counter_coords)
+            distances_coords_full[counter_coords] = possible_normal_move(counter_coords, board)
     return distances_coords_full
 
 
-def possible_normal_moves(board_object: Board):
-    '''
-    Cheks all the possible normal moves for every counter and
-    append its to a dict in form
-    {(xm, ym): distance made in this move}
-    xm, ym - move coords
-    '''
-    board = board_object.board()
-    color = board.moving_player()
-    black_coords, white_coords = finding_counters(board)
-    if color == 'black':
-        color_coords = black_coords
-    elif color == 'white':
-        color_coords = white_coords
-    move_distance = {}
-    for counter_coords in color_coords.keys():
-        move_coords, distance = possible_normal_move(counter_coords, board)
-        move_distance[move_coords] = distance
-    return move_distance
+# def possible_normal_moves(board_object: Board):
+#     '''
+#     Cheks all the possible normal moves for every counter and
+#     append its to a dict in form
+#     {(xm, ym): distance made in this move}
+#     xm, ym - move coords
+#     '''
+#     board = board_object.board()
+#     color = board_object.moving_player()
+#     black_coords, white_coords = finding_counters(board_object)
+#     if color == 'black':
+#         color_coords = black_coords
+#     elif color == 'white':
+#         color_coords = white_coords
+#     move_distance = {}
+#     for counter_coords in color_coords.keys():
+#         move_coords, distance = possible_normal_move(counter_coords, board, color)
+#         move_distance[move_coords] = distance
+#     return move_distance
 
 
-def possible_normal_move(counter_coords: tuple, board: list):
+def possible_normal_move(counter_coords: tuple, board_object: Board):
     '''
     Cheks possible normal move for given counter.
     Returns move_coords and made distance.
     '''
     xc, yc = counter_coords
-    if board[xc+1][xc+1] == 'o':
+    board = board_object.board()
+    board_range = range(0, 16)
+    color = board_object.moving_player()
+    if color == 'black':
+        a = xc + 1
+        b = yc + 1
+    else:
+        a = xc - 1
+        b = yc - 1
+
+    if b in board_range and a in board_range and board[b][a] == 'o':
         move_coords = xc+1, yc+1
         distance = round(sqrt(2), 1)
-    elif xc >= yc and board[yc+1][xc] == 'o':
+    elif b in board_range and xc >= yc and board[b][xc] == 'o':
         move_coords = xc, yc+1
         distance = 1
-    elif xc < yc and board[yc][xc+1] == 'o':
+    elif a in board_range and xc < yc and board[yc][a] == 'o':
         move_coords = xc+1, yc
         distance = 1
-    return move_coords, distance
+    else:
+        move_coords = None
+        distance = 0
+    return {move_coords: distance}
 
 
 def jump_move_distances(board_object: Board):
@@ -152,7 +166,7 @@ def jump_move_distances(board_object: Board):
     board = board_object.board()
     distance_coords = []
     def jump_move_distances_valid(counter_coords, distances,
-                            last_counter_coords=None):
+                                  last_counter_coords=None):
         '''
         Cheks all the possible jump_moves for given counter and
         append its distance to the dict in form
@@ -269,6 +283,7 @@ def max_distances(distances_coords: dict):
             'max_distance': max_distance
         }
         max_distance = 0
+        move_coords = None
     return counters_moves
 
 

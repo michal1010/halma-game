@@ -1,5 +1,5 @@
 from ai_player import (
-    ai_turn, begining, finding_counters, right_direction,
+    ai_turn, beggining, finding_counters, right_direction,
     move, distance_made
 )
 from aplication_logic import Board
