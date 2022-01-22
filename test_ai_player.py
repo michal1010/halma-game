@@ -1,5 +1,5 @@
 from ai_player import (
-    ai_turn, begining, finding_counters, moves_distances, right_direction,
+    ai_turn, begining, finding_counters, right_direction,
     move, distance_made
 )
 from aplication_logic import Board
@@ -73,16 +73,16 @@ def test_finding_counters():
     assert white_coords2 == white_coords
 
 
-def test_moves_distances_standard():
-    board = Board()
-    color_coords = {(0, 0): [0], (1, 0): [0], (2, 0): [2.8],
-                    (3, 0): [2.0, 2.8], (4, 0): [2.0], (0, 1): [0],
-                    (1, 1): [2.8], (2, 1): [2.8], (3, 1): [2.0, 2.0],
-                    (4, 1): [0], (0, 2): [2.8], (1, 2): [2.8],
-                    (2, 2): [2.0, 2.0], (3, 2): [2.8], (0, 3): [2.8, 2.0],
-                    (1, 3): [2.0, 2.0], (2, 3): [2.8], (0, 4): [2.0],
-                    (1, 4): [0]}
-    assert color_coords == moves_distances(board, 'black')
+# def test_moves_distances_standard():
+#     board = Board()
+#     color_coords = {(0, 0): [0], (1, 0): [0], (2, 0): [2.8],
+#                     (3, 0): [2.0, 2.8], (4, 0): [2.0], (0, 1): [0],
+#                     (1, 1): [2.8], (2, 1): [2.8], (3, 1): [2.0, 2.0],
+#                     (4, 1): [0], (0, 2): [2.8], (1, 2): [2.8],
+#                     (2, 2): [2.0, 2.0], (3, 2): [2.8], (0, 3): [2.8, 2.0],
+#                     (1, 3): [2.0, 2.0], (2, 3): [2.8], (0, 4): [2.0],
+#                     (1, 4): [0]}
+#     assert color_coords == moves_distances(board, 'black')
 
 
 def test_moves_distances_combo_jump_move():
@@ -95,5 +95,6 @@ def test_moves_distances_combo_jump_move():
     #                 (1, 3): [2.0, 2.0], (2, 3): [2.8], (0, 4): [2.0],
     #                 (1, 4): []}
     board._board = BOARD_AFTER_COMBO_JUMP_MOVE3
-    color_coords = moves_distances(board, 'black')
+    # color_coords = moves_distances(board, 'black')
+    ai_turn(board)
     pass

@@ -12,14 +12,12 @@ def beggining_prints(player1_color, player2_color):
 
 
 def taking_user_coords():
-    try:
-        xc = int(input('Enter the first coord:\t'))
-        yc = int(input('Enter the second coord:\t'))
-        print('Enter coords of place where you want to move your counter.')
-        xm = int(input('Enter the first coord:\t'))
-        ym = int(input('Enter the second coord:\t'))
-    except ValueError:
-        print('Coord must be an integer nubmer. Try again\t')
+    xc = int(input('Enter the first coord:\t'))
+    yc = int(input('Enter the second coord:\t'))
+    print('Enter coords of place where you want to move your counter.')
+    xm = int(input('Enter the first coord:\t'))
+    ym = int(input('Enter the second coord:\t'))
+
     counter_coords = (xc, yc)
     move_coords = (xm, ym)
     return counter_coords, move_coords
@@ -30,15 +28,12 @@ def end_of_the_game(board: Board, player1_color):
         winner_color = board.who_is_the_winner()
         winner = 'Player1' if winner_color == player1_color else 'Player2'
         print(f'{winner} has won the game.')
+        return True
+    else:
+        return False
 
 
-def main():
-    board = Board()
-    board.who_starts_the_play()
-
-    player1_color = board.moving_player()
-    player2_color = 'white' if player1_color == 'black' else 'white'
-    beggining_prints(player1_color, player2_color)
+def human_game(board: Board, player1_color):
     while True:
         if board.moving_player() == player1_color:
             player = 'Player1'
@@ -47,9 +42,11 @@ def main():
         print(f'{player} turn')
         print_the_board(board)
         print('Enter coords of the counter that your want to move.')
-        counter_coords, move_coords = taking_user_coords()
         try:
+            counter_coords, move_coords = taking_user_coords()
             board.move(counter_coords, move_coords)
+        except UnboundLocalError and ValueError:
+            print('Coord must be an integer nubmer. Try again\t')
         except InvalidCounterCoord:
             print('You typed invalid counter coords.\nTry again.')
             continue
@@ -57,7 +54,7 @@ def main():
             print('You need to move the counter during your turn.\n Try again')
             continue
         except IndexOutOfBoardError:
-            print('You typed coords out of board.\nTry again.')
+            print('You typed coords out of the board.\nTry again.')
             continue
         except AnotherCounterOnTheSquareError:
             print('There is another counter on the pointed square.\nTry again')
@@ -65,7 +62,36 @@ def main():
         except InvalidMoveError:
             print('Your move is invalid.\nTry again.')
             continue
-        end_of_the_game(board, player1_color)
+
+        if end_of_the_game(board, player1_color):
+            break
+
+
+def game_mode():
+    mode = ''
+    while mode.lower() != 'ai' and mode.lower() == 'normal':
+        info = '''Select if you want to play against normal player or ai player.
+    Type normal if you chosed normal player or ai if you chosed ai player.'''
+        mode = input(info)
+        if mode.lower() != 'ai' and mode.lower() != 'normal':
+            print('You chosed invalid option.')
+    return mode
+
+
+def ai_game(board: Board, player1_color):
+    pass
+
+
+def main():
+    board = Board()
+    mode = game_mode()
+    player1_color = board.moving_player()
+    player2_color = 'white' if player1_color == 'black' else 'white'
+    beggining_prints(player1_color, player2_color)
+    if mode == 'normal':
+        human_game(board, player1_color)
+    else:
+        ai_game(board, player1_color)
 
 
 def print_the_board(board: Board):
