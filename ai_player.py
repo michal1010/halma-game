@@ -1,4 +1,3 @@
-from tkinter import N
 from aplication_logic import Board
 from math import sqrt
 import copy

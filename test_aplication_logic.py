@@ -40,7 +40,7 @@ def test_who_is_the_winnerW():
 
 def test_normal_move_valid():
     board = Board()
-    board._moving_player = 'b'
+    board._moving_player = 'black'
     counter_coord = (0, 4)
     move_coord = (1, 5)
     board.move(counter_coord, move_coord)
@@ -49,7 +49,7 @@ def test_normal_move_valid():
 
 def test_normal_move_not_moved():
     board = Board()
-    board._moving_player = 'b'
+    board._moving_player = 'black'
     counter_coord = (0, 4)
     move_coord = (0, 4)
     with pytest.raises(NotMovedError):
@@ -58,7 +58,7 @@ def test_normal_move_not_moved():
 
 def test_normal_move_not_in_range():
     board = Board()
-    board._moving_player = 'b'
+    board._moving_player = 'black'
     counter_coord = (0, 4)
     move_coord = (4, 5)
     with pytest.raises(InvalidMoveError):
@@ -67,7 +67,7 @@ def test_normal_move_not_in_range():
 
 def test_normal_move_another_counter_on_the_square():
     board = Board()
-    board._moving_player = 'b'
+    board._moving_player = 'black'
     counter_coord = (0, 4)
     move_coord = (0, 3)
     with pytest.raises(AnotherCounterOnTheSquareError):
@@ -76,7 +76,7 @@ def test_normal_move_another_counter_on_the_square():
 
 def test_normal_move_out_of_board_plus_coord():
     board = Board()
-    board._moving_player = 'w'
+    board._moving_player = 'white'
     counter_coord = (15, 15)
     move_coord = (16, 15)
     with pytest.raises(IndexOutOfBoardError):
@@ -85,7 +85,7 @@ def test_normal_move_out_of_board_plus_coord():
 
 def test_normal_move_out_of_board_minus_coord():
     board = Board()
-    board._moving_player = 'b'
+    board._moving_player = 'black'
     counter_coord = (0, 4)
     move_coord = (-1, 4)
     with pytest.raises(IndexOutOfBoardError):
@@ -94,7 +94,7 @@ def test_normal_move_out_of_board_minus_coord():
 
 def test_counter_is_of_pointed_square_normal_move():
     board = Board()
-    board._moving_player = 'b'
+    board._moving_player = 'black'
     counter_coord = (0, 10)
     move_coord = (0, 11)
     with pytest.raises(InvalidCounterCoord):
@@ -106,7 +106,7 @@ def test_counter_is_of_pointed_square_normal_move():
 
 def test_jump_move_valid():
     board = Board()
-    board._moving_player = 'b'
+    board._moving_player = 'black'
     counter_coord = (0, 3)
     move_coord = (2, 5)
     board.move(counter_coord, move_coord)
@@ -115,7 +115,7 @@ def test_jump_move_valid():
 
 def test_jump_move_not_moved():
     board = Board()
-    board._moving_player = 'b'
+    board._moving_player = 'black'
     counter_coord = (0, 4)
     move_coord = (0, 4)
     with pytest.raises(NotMovedError):
@@ -124,7 +124,7 @@ def test_jump_move_not_moved():
 
 def test_jump_move_not_in_range():
     board = Board()
-    board._moving_player = 'b'
+    board._moving_player = 'black'
     counter_coord = (0, 4)
     move_coord = (4, 5)
     with pytest.raises(InvalidMoveError):
@@ -141,7 +141,7 @@ def test_jump_move_not_in_range():
 
 def test_jump_move_another_counter_on_the_square():
     board = Board()
-    board._moving_player = 'b'
+    board._moving_player = 'black'
     counter_coord = (0, 2)
     move_coord = (0, 4)
     with pytest.raises(AnotherCounterOnTheSquareError):
@@ -150,7 +150,7 @@ def test_jump_move_another_counter_on_the_square():
 
 def test_jump_move_out_of_board_plus_coord():
     board = Board()
-    board._moving_player = 'w'
+    board._moving_player = 'white'
     counter_coord = (15, 15)
     move_coord = (17, 15)
     with pytest.raises(IndexOutOfBoardError):
@@ -159,7 +159,7 @@ def test_jump_move_out_of_board_plus_coord():
 
 def test_jump_move_out_of_board_minus_coord():
     board = Board()
-    board._moving_player = 'b'
+    board._moving_player = 'black'
     counter_coord = (0, 4)
     move_coord = (-2, 4)
     with pytest.raises(IndexOutOfBoardError):
@@ -168,7 +168,7 @@ def test_jump_move_out_of_board_minus_coord():
 
 def test_counter_is_of_pointed_square_move():
     board = Board()
-    board._moving_player = 'b'
+    board._moving_player = 'black'
     counter_coord = (0, 10)
     move_coord = (0, 11)
     with pytest.raises(InvalidCounterCoord):
@@ -177,23 +177,23 @@ def test_counter_is_of_pointed_square_move():
 
 def test_combo_jump_move_valid():
     board = Board()
-    board._moving_player = 'b'
+    board._moving_player = 'black'
     counter_coord = (0, 3)
     move_coord = (2, 5)
     board.move(counter_coord, move_coord)
     assert board.board() == BOARD_AFTER_JUMP_MOVE
     counter_coord = (1, 3)
     move_coord = (3, 5)
-    board._moving_player = 'b'
+    board._moving_player = 'black'
     board.move(counter_coord, move_coord)
     assert board.board() == BOARD_AFTER_COMBO_JUMP_MOVE1
     counter_coord = (0, 4)
     move_coord = (4, 4)
-    board._moving_player = 'b'
+    board._moving_player = 'black'
     board.move(counter_coord, move_coord)
     assert board.board() == BOARD_AFTER_COMBO_JUMP_MOVE2
     counter_coord = (1, 4)
     move_coord = (5, 4)
-    board._moving_player = 'b'
+    board._moving_player = 'black'
     board.move(counter_coord, move_coord)
     assert board.board() == BOARD_AFTER_COMBO_JUMP_MOVE3
