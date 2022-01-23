@@ -34,6 +34,8 @@ class Board:
         self._board = copy.deepcopy(BOARD_START)
         self._moves_made = 0
         self._turn_number = 0
+        self.end_phase_b = False
+        self.end_phase_w = False
 
     def turn_number(self):
         return self._turn_number
@@ -95,7 +97,7 @@ class Board:
             raise InvalidCounterCoord(info)
 
         # Checking if there is no counter on our move_square
-        elif self._board[ym][xm] != 'o':
+        elif self._board[ym][xm] != '-':
             info = 'There is another counter on this square'
             raise AnotherCounterOnTheSquareError(info)
 
@@ -114,7 +116,7 @@ class Board:
             xc, yc = counter_coords
             xm, ym = move_coords
             self._board[ym][xm] = self._board[yc][xc]
-            self._board[yc][xc] = 'o'
+            self._board[yc][xc] = '-'
             self._change_moving_player()
         else:
             raise InvalidMoveError('You can not move to this square.')
@@ -137,49 +139,49 @@ class Board:
 
         # Cheking all the options of jump_move for the counter
         if (
-            xc-2 > -1 and yc-2 > -1 and board[yc-1][xc-1] != 'o' and
-            board[yc-2][xc-2] == 'o' and (xc-2, yc-2) not in previous_coords
+            xc-2 > -1 and yc-2 > -1 and board[yc-1][xc-1] != '-' and
+            board[yc-2][xc-2] == '-' and (xc-2, yc-2) not in previous_coords
         ):
             self._jump_move_validation((xc-2, yc-2), move_coords,
                                        previous_coords)
         if (
-            yc-2 > -1 and board[yc-1][xc] != 'o' and board[yc-2][xc] == 'o'
+            yc-2 > -1 and board[yc-1][xc] != '-' and board[yc-2][xc] == '-'
             and (xc, yc-2) not in previous_coords
         ):
             self._jump_move_validation((xc, yc-2), move_coords,
                                        previous_coords)
         if (
-            yc-2 > -1 and xc+2 < 16 and board[yc-1][xc+1] != 'o' and
-            board[yc-2][xc+2] == 'o' and (xc+2, yc-2) not in previous_coords
+            yc-2 > -1 and xc+2 < 16 and board[yc-1][xc+1] != '-' and
+            board[yc-2][xc+2] == '-' and (xc+2, yc-2) not in previous_coords
         ):
             self._jump_move_validation((xc+2, yc-2), move_coords,
                                        previous_coords)
         if (
-            xc+2 < 16 and board[yc][xc+1] != 'o' and board[yc][xc+2] == 'o'
+            xc+2 < 16 and board[yc][xc+1] != '-' and board[yc][xc+2] == '-'
             and (xc+2, yc) not in previous_coords
         ):
             self._jump_move_validation((xc+2, yc), move_coords,
                                        previous_coords)
         if (
-            xc+2 < 16 and yc+2 < 16 and board[yc+1][xc+1] != 'o' and
-            board[yc+2][xc+2] == 'o' and (xc+2, yc+2) not in previous_coords
+            xc+2 < 16 and yc+2 < 16 and board[yc+1][xc+1] != '-' and
+            board[yc+2][xc+2] == '-' and (xc+2, yc+2) not in previous_coords
         ):
             self._jump_move_validation((xc+2, yc+2), move_coords,
                                        previous_coords)
         if (
-            yc+2 < 16 and board[yc+1][xc] != 'o' and board[yc+2][xc] == 'o'
+            yc+2 < 16 and board[yc+1][xc] != '-' and board[yc+2][xc] == '-'
             and (xc, yc+2) not in previous_coords
         ):
             self._jump_move_validation((xc, yc+2), move_coords,
                                        previous_coords)
         if (
-            xc-2 > -1 and yc+2 < 16 and board[yc+1][xc-1] != 'o' and
-            board[yc+2][xc-2] == 'o' and (xc-2, yc+2) not in previous_coords
+            xc-2 > -1 and yc+2 < 16 and board[yc+1][xc-1] != '-' and
+            board[yc+2][xc-2] == '-' and (xc-2, yc+2) not in previous_coords
         ):
             self._jump_move_validation((xc-2, yc+2), move_coords,
                                        previous_coords)
         if (
-            xc-2 > -1 and board[yc][xc-1] != 'o' and board[yc][xc-2] == 'o'
+            xc-2 > -1 and board[yc][xc-1] != '-' and board[yc][xc-2] == '-'
             and (xc-2, yc) not in previous_coords
         ):
             self._jump_move_validation((xc-2, yc), move_coords,
@@ -196,7 +198,7 @@ class Board:
         xc, yc = counter_coords
         xm, ym = move_coords
         self._board[ym][xm] = self._board[yc][xc]
-        self._board[yc][xc] = 'o'
+        self._board[yc][xc] = '-'
         self._change_moving_player()
 
     def _normal_move_range(self, i):
