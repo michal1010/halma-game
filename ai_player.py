@@ -51,8 +51,15 @@ def move(board: Board):
     '''
     counter_moves = move_distance(board)
     counter_moves_max = max_distances(counter_moves)
-    counter_coords, move_coords = the_best_move(counter_moves_max)
+    color = board.moving_player()
+    counter_coords, move_coords = the_best_move(counter_moves_max, color)
+    # if move_coords is None:
+    #     counter_coords, move_coords = end_phase(board)
     board.move(counter_coords, move_coords)
+
+
+def end_phase(board: Board):
+    pass
 
 
 def finding_counters(board: Board):
@@ -101,27 +108,6 @@ def normal_move_distances(board: Board, distances_coords: dict):
     return distances_coords_full
 
 
-# def possible_normal_moves(board_object: Board):
-#     '''
-#     Cheks all the possible normal moves for every counter and
-#     append its to a dict in form
-#     {(xm, ym): distance made in this move}
-#     xm, ym - move coords
-#     '''
-#     board = board_object.board()
-#     color = board_object.moving_player()
-#     black_coords, white_coords = finding_counters(board_object)
-#     if color == 'black':
-#         color_coords = black_coords
-#     elif color == 'white':
-#         color_coords = white_coords
-#     move_distance = {}
-#     for counter_coords in color_coords.keys():
-#         move_coords, distance = possible_normal_move(counter_coords, board, color)
-#         move_distance[move_coords] = distance
-#     return move_distance
-
-
 def possible_normal_move(counter_coords: tuple, board_object: Board):
     '''
     Cheks possible normal move for given counter.
@@ -138,14 +124,23 @@ def possible_normal_move(counter_coords: tuple, board_object: Board):
         a = xc - 1
         b = yc - 1
 
-    if b in board_range and a in board_range and board[b][a] == 'o':
-        move_coords = xc+1, yc+1
+    if (
+        b in board_range and a in board_range and board[b][a] == 'o'
+        # and right_direction(board_object, (xc, yc), (a, b), color) == 'right direction'
+    ):
+        move_coords = a, b
         distance = round(sqrt(2), 1)
-    elif b in board_range and xc >= yc and board[b][xc] == 'o':
-        move_coords = xc, yc+1
+    elif (
+        b in board_range and board[b][xc] == 'o'
+        # and right_direction(board_object, (xc, yc), (xc, b), color) == 'right direction'
+    ):
+        move_coords = xc, b
         distance = 1
-    elif a in board_range and xc < yc and board[yc][a] == 'o':
-        move_coords = xc+1, yc
+    elif (
+        a in board_range and board[yc][a] == 'o'
+        # and right_direction(board_object, (xc, yc), (a, yc), color) == 'right direction'
+    ):
+        move_coords = a, yc
         distance = 1
     else:
         move_coords = None
@@ -286,17 +281,26 @@ def max_distances(distances_coords: dict):
     return counters_moves
 
 
-def the_best_move(counter_coords):
+def the_best_move(counter_coords, color):
     '''
     Peaks from dict in form
     {xc, yc: {move_coords: (xm, ym), max_distance: distance}}
     pair of key and move_coords value with the biggest max_distance.
     '''
-    counter = None
+    counter = (0, 0)
     move = None
     distance = 0
+
     for counter_coords, move_values in counter_coords.items():
-        if distance < move_values['max_distance']:
+        if color == 'black':
+            direction_condition = False
+        elif color == 'white':
+            direction_condition = sum(counter_coords) < sum(counter)
+        if (
+            distance < move_values['max_distance'] or
+            (distance == move_values['max_distance'] and
+             direction_condition)
+        ):
             distance = move_values['max_distance']
             counter = counter_coords
             move = move_values['move_coords']

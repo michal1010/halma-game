@@ -122,7 +122,7 @@ def ai_human_game(board: Board, player1_color):
 
 def ai_game(board: Board, player1_color):
     while True:
-        board._board = BOARD_TEST
+        # board._board = BOARD_TEST
         if board.moving_player() == player1_color:
             player = 'Player1'
         else:
@@ -130,7 +130,7 @@ def ai_game(board: Board, player1_color):
         print(f'{player} turn')
         print_the_board(board)
         ai_turn(board)
-        time.sleep(3)
+        # time.sleep(3)
         # try:
         #     counter_coords, moai ve_coords = taking_user_coords()
         #     board.move(counter_coords, move_coords)
