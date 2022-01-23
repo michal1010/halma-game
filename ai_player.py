@@ -60,7 +60,7 @@ def move(board: Board):
     counter_moves_max = max_distances(counter_moves)
     color = board.moving_player()
     counter_coords, move_coords = the_best_move(counter_moves_max, color)
-    # counter_coords, move_coords = begin_end_phase(move_coords, counter_coords, board)
+    counter_coords, move_coords = begin_end_phase(move_coords, counter_coords, board)
     board.move(counter_coords, move_coords)
 
 
@@ -72,9 +72,9 @@ def begin_end_phase(move_coords, counter_coords, board: Board):
         else:
             board.end_phase_w = True
     if board.end_phase_w and color == 'white':
-        move_coords, counter_coords = end_phase(board)
+        coutner_coords, move_coords = end_phase(board)
     elif board.end_phase_b and color == 'black':
-        move_coords, counter_coords = end_phase(board)
+        counter_coords, move_coords = end_phase(board)
     return counter_coords, move_coords
 
 
@@ -94,8 +94,13 @@ def end_phase(board: Board):
     for counter in color_coords.keys():
         if counter not in winning_coords:
             conuters_not_winning.append(counter)
-    for coords in empty_winning_coords:
-        pass
+    # --------------------------------------
+    direction = empty_winning_coords[-1]
+    counter_moves = move_distance(board, direction)
+    counter_moves_max = max_distances(counter_moves)
+    color = board.moving_player()
+    counter_coords, move_coords = the_best_move(counter_moves_max, color)
+    return counter_coords, move_coords
 
 
 def finding_counters(board: Board):
@@ -116,22 +121,22 @@ def finding_counters(board: Board):
     return black_coords, white_coords
 
 
-def move_distance(board):
+def move_distance(board, direction=None):
     '''
     Cheks all the possible moves for every counter and
     append its distance to the dict in form
     {(x, y): {(xm, ym): distance made in this move}.
     xm, ym - move_coords
     '''
-    distances_coords = jump_move_distances(board)
+    distances_coords = jump_move_distances(board, direction)
     # If jump move was not possible in case of a counter
     # we are adding possible normal move of this counter to
     # the distances_coords dict
-    distances_coords_full = normal_move_distances(board, distances_coords)
+    distances_coords_full = normal_move_distances(board, distances_coords, direction)
     return distances_coords_full
 
 
-def normal_move_distances(board: Board, distances_coords: dict):
+def normal_move_distances(board: Board, distances_coords: dict, direction=None):
     '''
     Cheks all the possible normal moves for every counter and
     adds them to the dict made in jump_move_distances_function.
@@ -140,7 +145,7 @@ def normal_move_distances(board: Board, distances_coords: dict):
     distances_coords_full = copy.deepcopy(distances_coords)
     for counter_coords, moves_values in distances_coords.items():
         if moves_values == {}:
-            distances_coords_full[counter_coords] = possible_normal_move(counter_coords, board)
+            distances_coords_full[counter_coords] = possible_normal_move(counter_coords, board, direction)
     return distances_coords_full
 
 
@@ -208,7 +213,7 @@ def possible_normal_move(counter_coords: tuple, board_object: Board, direction=N
     return {move_coords: distance}
 
 
-def jump_move_distances(board_object: Board):
+def jump_move_distances(board_object: Board, direction=None):
     '''
     Cheks all the possible jump moves for every counter and
     append its distance to the dict in form
@@ -220,7 +225,7 @@ def jump_move_distances(board_object: Board):
     board = board_object.board()
     distance_coords = []
     def jump_move_distances_valid(counter_coords, distances,
-                                  last_counter_coords=None):
+                                  last_counter_coords=None, direction=None):
         '''
         Cheks all the possible jump_moves for given counter and
         append its distance to the dict in form
@@ -236,58 +241,58 @@ def jump_move_distances(board_object: Board):
             xc-2 > -1 and yc-2 > -1 and board[yc-1][xc-1] != '-' and
             board[yc-2][xc-2] == '-' and (xc-2, yc-2) != last_counter_coords
             and 'right direction' == right_direction(board_object,
-                                                     counter_coords, (xc-2, yc-2), color)
+                                                     counter_coords, (xc-2, yc-2), color, direction)
         ):
-            jump_move_distances_valid((xc-2, yc-2), distances, counter_coords)
+            jump_move_distances_valid((xc-2, yc-2), distances, counter_coords, direction)
         if (
             yc-2 > -1 and board[yc-1][xc] != '-' and board[yc-2][xc] == '-'
             and (xc, yc-2) != last_counter_coords and
             'right direction' == right_direction(board_object, counter_coords,
-                                                 (xc, yc-2), color)
+                                                 (xc, yc-2), color, direction)
         ):
-            jump_move_distances_valid((xc, yc-2), distances, counter_coords)
+            jump_move_distances_valid((xc, yc-2), distances, counter_coords, direction)
         if (
             yc-2 > -1 and xc+2 < 16 and board[yc-1][xc+1] != '-' and
             board[yc-2][xc+2] == '-' and (xc+2, yc-2) != last_counter_coords and
             'right direction' == right_direction(board_object, counter_coords,
-                                                 (xc+2, yc-2), color)
+                                                 (xc+2, yc-2), color, direction)
         ):
-            jump_move_distances_valid((xc+2, yc-2), distances, counter_coords)
+            jump_move_distances_valid((xc+2, yc-2), distances, counter_coords, direction)
         if (
             xc+2 < 16 and board[yc][xc+1] != '-' and board[yc][xc+2] == '-'
             and (xc+2, yc) != last_counter_coords and
             'right direction' == right_direction(board_object, counter_coords,
-                                                 (xc+2, yc), color)
+                                                 (xc+2, yc), color, direction)
         ):
-            jump_move_distances_valid((xc+2, yc), distances, counter_coords)
+            jump_move_distances_valid((xc+2, yc), distances, counter_coords, direction)
         if (
             xc+2 < 16 and yc+2 < 16 and board[yc+1][xc+1] != '-' and
             board[yc+2][xc+2] == '-' and (xc+2, yc+2) != last_counter_coords
             and 'right direction' == right_direction(board_object, counter_coords,
-                                                     (xc+2, yc+2), color)
+                                                     (xc+2, yc+2), color, direction)
         ):
-            jump_move_distances_valid((xc+2, yc+2), distances, counter_coords)
+            jump_move_distances_valid((xc+2, yc+2), distances, counter_coords, direction)
         if (
             yc+2 < 16 and board[yc+1][xc] != '-' and board[yc+2][xc] == '-'
             and (xc, yc+2) != last_counter_coords and
             'right direction' == right_direction(board_object, counter_coords,
-                                                 (xc, yc+2), color)
+                                                 (xc, yc+2), color, direction)
         ):
-            jump_move_distances_valid((xc, yc+2), distances, counter_coords)
+            jump_move_distances_valid((xc, yc+2), distances, counter_coords, direction)
         if (
             xc-2 > -1 and yc+2 < 16 and board[yc+1][xc-1] != '-' and
             board[yc+2][xc-2] == '-' and (xc-2, yc+2) != last_counter_coords
             and 'right direction' == right_direction(board_object, counter_coords,
-                                                     (xc-2, yc+2), color)
+                                                     (xc-2, yc+2), color, direction)
         ):
-            jump_move_distances_valid((xc-2, yc+2), distances, counter_coords)
+            jump_move_distances_valid((xc-2, yc+2), distances, counter_coords, direction)
         if (
             xc-2 > -1 and board[yc][xc-1] != '-' and board[yc][xc-2] == '-'
             and (xc-2, yc) != last_counter_coords and
             'right direction' == right_direction(board_object, counter_coords,
-                                                 (xc-2, yc), color)
+                                                 (xc-2, yc), color, direction)
         ):
-            jump_move_distances_valid((xc-2, yc), distances, counter_coords)
+            jump_move_distances_valid((xc-2, yc), distances, counter_coords, direction)
 
         if last_counter_coords is not None and len(distance_coords) > 1:
             max_distance = distance_made(distance_coords[0], distance_coords[-1])
@@ -307,7 +312,7 @@ def jump_move_distances(board_object: Board):
 
     for counter_coords in color_coords.keys():
         distances = {}
-        jump_move_distances_valid(counter_coords, distances)
+        jump_move_distances_valid(counter_coords, distances, direction)
         distances_coords[counter_coords] = distances.copy()
         distances.clear()
         distance_coords.clear()
