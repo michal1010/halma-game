@@ -23,8 +23,8 @@ def beggining(board: Board):
     pass
 
 
-def right_direction(board: Board,
-                    counter_coords, move_coords, player_color):
+def right_direction(board: Board, counter_coords,
+                    move_coords, player_color, direction=None):
     '''
     Cheks if we are moving the counter in the right direction.
     In advantage of the player are only moves in direction of
@@ -32,16 +32,21 @@ def right_direction(board: Board,
     '''
     xc, yc = counter_coords
     xm, ym = move_coords
-    delta_x = xm - xc
-    delta_y = ym - yc
     # player_color = board.moving_player()
+
     if player_color == 'black':
-        if delta_x >= 0 and delta_y >= 0:
+        direction = (15, 15) if direction is None else direction
+        current_distance = distance_made(counter_coords, direction)
+        move_distance = distance_made(move_coords, direction)
+        if current_distance > move_distance:
             return 'right direction'
         else:
             return 'wrong direction'
     elif player_color == 'white':
-        if delta_x <= 0 and delta_y <= 0:
+        direction = (0, 0) if direction is None else direction
+        current_distance = distance_made(counter_coords, direction)
+        move_distance = distance_made(move_coords, direction)
+        if current_distance > move_distance:
             return 'right direction'
         else:
             return 'wrong direction'
@@ -55,7 +60,7 @@ def move(board: Board):
     counter_moves_max = max_distances(counter_moves)
     color = board.moving_player()
     counter_coords, move_coords = the_best_move(counter_moves_max, color)
-    counter_coords, move_coords = begin_end_phase(move_coords, counter_coords, board)
+    # counter_coords, move_coords = begin_end_phase(move_coords, counter_coords, board)
     board.move(counter_coords, move_coords)
 
 
@@ -90,10 +95,7 @@ def end_phase(board: Board):
         if counter not in winning_coords:
             conuters_not_winning.append(counter)
     for coords in empty_winning_coords:
-
-
-
-
+        pass
 
 
 def finding_counters(board: Board):
@@ -142,7 +144,7 @@ def normal_move_distances(board: Board, distances_coords: dict):
     return distances_coords_full
 
 
-def possible_normal_move(counter_coords: tuple, board_object: Board):
+def possible_normal_move(counter_coords: tuple, board_object: Board, direction=None):
     '''
     Cheks possible normal move for given counter.
     Returns move_coords and made distance.
@@ -151,30 +153,54 @@ def possible_normal_move(counter_coords: tuple, board_object: Board):
     board = board_object.board()
     board_range = range(0, 16)
     color = board_object.moving_player()
-    if color == 'black':
-        a = xc + 1
-        b = yc + 1
-    else:
-        a = xc - 1
-        b = yc - 1
 
     if (
-        b in board_range and a in board_range and board[b][a] == '-'
-        # and right_direction(board_object, (xc, yc), (a, b), color) == 'right direction'
+        yc+1 in board_range and xc+1 in board_range and board[yc+1][xc+1] == '-'
+        and right_direction(board_object, (xc, yc), (xc+1, yc+1), color, direction) == 'right direction'
     ):
-        move_coords = a, b
+        move_coords = xc+1, yc+1
         distance = round(sqrt(2), 1)
     elif (
-        b in board_range and board[b][xc] == '-'
-        # and right_direction(board_object, (xc, yc), (xc, b), color) == 'right direction'
+        yc-1 in board_range and xc-1 in board_range and board[yc-1][xc-1] == '-'
+        and right_direction(board_object, (xc, yc), (xc-1, yc-1), color, direction) == 'right direction'
     ):
-        move_coords = xc, b
+        move_coords = xc-1, yc-1
+        distance = round(sqrt(2), 1)
+    elif (
+        yc-1 in board_range and xc+1 in board_range and board[yc-1][xc+1] == '-'
+        and right_direction(board_object, (xc, yc), (xc+1, yc-1), color, direction) == 'right direction'
+    ):
+        move_coords = xc+1, yc-1
+        distance = round(sqrt(2), 1)
+    elif (
+        yc+1 in board_range and xc-1 in board_range and board[yc+1][xc-1] == '-'
+        and right_direction(board_object, (xc, yc), (xc-1, yc+1), color, direction) == 'right direction'
+    ):
+        move_coords = xc-1, yc+1
+        distance = round(sqrt(2), 1)
+    elif (
+        yc+1 in board_range and board[yc+1][xc] == '-'
+        and right_direction(board_object, (xc, yc), (xc, yc+1), color, direction) == 'right direction'
+    ):
+        move_coords = xc, yc+1
         distance = 1
     elif (
-        a in board_range and board[yc][a] == '-'
-        # and right_direction(board_object, (xc, yc), (a, yc), color) == 'right direction'
+        yc-1 in board_range and board[yc-1][xc] == '-'
+        and right_direction(board_object, (xc, yc), (xc, yc-1), color, direction) == 'right direction'
     ):
-        move_coords = a, yc
+        move_coords = xc, yc-1
+        distance = 1
+    elif (
+        xc+1 in board_range and board[yc][xc+1] == '-'
+        and right_direction(board_object, (xc, yc), (xc+1, yc), color, direction) == 'right direction'
+    ):
+        move_coords = xc+1, yc
+        distance = 1
+    elif (
+        xc-1 in board_range and board[yc][xc-1] == '-'
+        and right_direction(board_object, (xc, yc), (xc-1, yc), color, direction) == 'right direction'
+    ):
+        move_coords = xc-1, yc
         distance = 1
     else:
         move_coords = None
@@ -329,7 +355,7 @@ def the_best_move(counter_coords, color):
         if color == 'black':
             direction_condition = False
         elif color == 'white':
-            direction_condition = sum(counter_coords) < sum(counter)
+            direction_condition = sum(counter_coords) > sum(counter)
         if (
             distance < move_values['max_distance'] or
             (distance == move_values['max_distance'] and

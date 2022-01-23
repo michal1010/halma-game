@@ -130,7 +130,7 @@ def ai_game(board: Board, player1_color):
         print(f'{player} turn')
         print_the_board(board)
         ai_turn(board)
-        # time.sleep(3)
+        time.sleep(1)
         # try:
         #     counter_coords, moai ve_coords = taking_user_coords()
         #     board.move(counter_coords, move_coords)
