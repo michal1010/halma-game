@@ -205,8 +205,8 @@ def jump_move_distances(board_object: Board, direction=None):
             move_coords = distance_coords[-1]
             distances[move_coords] = max_distance
 
-        if len(distance_coords) > 1:
-            distance_coords.pop()
+        # if len(distance_coords) > 1:
+        #     distance_coords.pop()
 
     color = board_object.moving_player()
     black_coords, white_coords = finding_counters(board_object)
@@ -222,7 +222,9 @@ def jump_move_distances(board_object: Board, direction=None):
 
     for counter_coords in color_coords.keys():
         distances = {}
-        jump_move_distances_valid(counter_coords, distances, direction)
+        jump_move_distances_valid(
+            counter_coords, distances, direction=direction
+        )
         distances_dict[counter_coords] = distances.copy()
         distances.clear()
         distance_coords.clear()
