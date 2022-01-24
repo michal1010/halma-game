@@ -61,7 +61,6 @@ def jump_move_distances(board_object: Board, direction=None):
 
     def jump_move_distances_valid(
         counter_coords,
-        distances,
         distance_coords,
         last_counter_coords=None,
         direction=None,
@@ -94,7 +93,6 @@ def jump_move_distances(board_object: Board, direction=None):
         ):
             jump_move_distances_valid(
                 (xc - 2, yc - 2),
-                distances,
                 distance_coords,
                 counter_coords,
                 direction,
@@ -111,7 +109,6 @@ def jump_move_distances(board_object: Board, direction=None):
         ):
             jump_move_distances_valid(
                 (xc, yc - 2),
-                distances,
                 distance_coords,
                 counter_coords,
                 direction,
@@ -133,7 +130,6 @@ def jump_move_distances(board_object: Board, direction=None):
         ):
             jump_move_distances_valid(
                 (xc + 2, yc - 2),
-                distances,
                 distance_coords,
                 counter_coords,
                 direction,
@@ -150,7 +146,6 @@ def jump_move_distances(board_object: Board, direction=None):
         ):
             jump_move_distances_valid(
                 (xc + 2, yc),
-                distances,
                 distance_coords,
                 counter_coords,
                 direction,
@@ -172,7 +167,6 @@ def jump_move_distances(board_object: Board, direction=None):
         ):
             jump_move_distances_valid(
                 (xc + 2, yc + 2),
-                distances,
                 distance_coords,
                 counter_coords,
                 direction,
@@ -189,7 +183,6 @@ def jump_move_distances(board_object: Board, direction=None):
         ):
             jump_move_distances_valid(
                 (xc, yc + 2),
-                distances,
                 distance_coords,
                 counter_coords,
                 direction,
@@ -211,7 +204,6 @@ def jump_move_distances(board_object: Board, direction=None):
         ):
             jump_move_distances_valid(
                 (xc - 2, yc + 2),
-                distances,
                 distance_coords,
                 counter_coords,
                 direction,
@@ -228,7 +220,6 @@ def jump_move_distances(board_object: Board, direction=None):
         ):
             jump_move_distances_valid(
                 (xc - 2, yc),
-                distances,
                 distance_coords,
                 counter_coords,
                 direction,
@@ -240,7 +231,7 @@ def jump_move_distances(board_object: Board, direction=None):
             )
             move_coords = distance_coords[-1]
             distances[move_coords] = max_distance
-
+            pass
         # if len(distance_coords) > 1:
         #     distance_coords.pop()
 
@@ -259,7 +250,7 @@ def jump_move_distances(board_object: Board, direction=None):
     for counter_coords in color_coords.keys():
         distances = {}
         jump_move_distances_valid(
-            counter_coords, distances, distance_coords, direction=direction
+            counter_coords, distance_coords, direction=direction
         )
         distances_dict[counter_coords] = distances.copy()
         distances.clear()
