@@ -1,8 +1,13 @@
 from ai_player import (
     ai_turn,
     finding_counters,
+    jump_move_distances,
+    jump_move_distances_valid,
+    max_distances,
+    possible_normal_move,
     right_direction,
     distance_made,
+    the_best_move,
 )
 from aplication_logic import Board
 from constants import BOARD_AFTER_COMBO_JUMP_MOVE3
@@ -21,7 +26,7 @@ def test_distance_made_float_outcome():
     counter_coords = (5, 7)
     move_coords = (4, 6)
     distance = distance_made(counter_coords, move_coords)
-    assert distance == 1.4
+    assert distance == 1.41
 
 
 # ---------------------- RIGHT_DIRECTION TESTS -----------------------------
@@ -131,3 +136,71 @@ def test_moves_distances_combo_jump_move():
     # color_coords = moves_distances(board, 'black')
     ai_turn(board)
     pass
+
+
+def test_possible_normal_move():
+    board = Board()
+    board._moving_player = 'black'
+    counter_coords = (2, 4)
+    assert possible_normal_move(counter_coords, board) == {
+        (3, 5): 1.41
+    }
+
+
+def test_jump_move_distances_valid():
+    distances = {}
+    distances_coords = []
+    counter_coords = (3, 0)
+    board = Board()
+    board._moving_player = 'black'
+    board._board = BOARD_AFTER_COMBO_JUMP_MOVE3
+    distnaces_function = jump_move_distances_valid(
+        board, board.board(), counter_coords, distances,
+        distances_coords
+    )
+    assert distnaces_function == {(5, 0): 1.18, (5, 2): 2.81}
+
+
+def test_max_distances_black():
+    distances_coords = {
+        (1, 1): {
+            (1, 2): 1,
+            (2, 1): 1,
+        },
+        (3, 3): {(4, 4): 1.41, (5, 5): 2.83},
+    }
+    max_distances_coords = {
+        (1, 1): {"move_coords": (1, 2), "max_distance": 1},
+        (3, 3): {"move_coords": (5, 5), "max_distance": 2.83},
+    }
+    assert max_distances(distances_coords, "black") == max_distances_coords
+
+
+def test_max_distances_white():
+    distances_coords = {
+        (2, 2): {
+            (1, 2): 1,
+            (2, 1): 1,
+        },
+        (6, 6): {(4, 4): 1.41, (5, 5): 2.83},
+    }
+    max_distances_coords = {
+        (2, 2): {"move_coords": (2, 1), "max_distance": 1},
+        (6, 6): {"move_coords": (5, 5), "max_distance": 2.83},
+    }
+    assert max_distances(distances_coords, "white") == max_distances_coords
+
+
+def test_the_best_move():
+    counter_moves_max = {
+        (0, 0): {"move_coords": None, "max_distance": 0},
+        (2, 0): {"move_coords": (4, 2), "max_distance": 2.82},
+        (2, 1): {"move_coords": (4, 3), "max_distance": 2.82},
+        (2, 2): {"move_coords": (4, 2), "max_distance": 1.35},
+    }
+    counter_coords = (2, 0)
+    move_coords = (4, 2)
+    assert the_best_move(counter_moves_max, "black") == (
+        counter_coords,
+        move_coords,
+    )

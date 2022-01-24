@@ -285,9 +285,9 @@ def jump_move_distances_valid(
         direction = (0, 0) if direction is None else direction
 
     if last_counter_coords is not None and len(distance_coords) > 1:
-        max_distance = distance_made(
-            distance_coords[0], direction
-        ) - distance_made(distance_coords[-1], direction)
+        beggining_distance = distance_made(distance_coords[0], direction)
+        after_move_distance = distance_made(distance_coords[-1], direction)
+        max_distance = round(beggining_distance - after_move_distance, 2)
         move_coords = distance_coords[-1]
         distances[move_coords] = max_distance
     return distances
@@ -332,7 +332,7 @@ def possible_normal_move(
         == "right direction"
     ):
         move_coords = xc + 1, yc + 1
-        distance = round(sqrt(2), 1)
+        distance = round(sqrt(2), 2)
     elif (
         yc - 1 in board_range
         and xc - 1 in board_range
@@ -343,7 +343,7 @@ def possible_normal_move(
         == "right direction"
     ):
         move_coords = xc - 1, yc - 1
-        distance = round(sqrt(2), 1)
+        distance = round(sqrt(2), 2)
     elif (
         yc - 1 in board_range
         and xc + 1 in board_range
@@ -354,7 +354,7 @@ def possible_normal_move(
         == "right direction"
     ):
         move_coords = xc + 1, yc - 1
-        distance = round(sqrt(2), 1)
+        distance = round(sqrt(2), 2)
     elif (
         yc + 1 in board_range
         and xc - 1 in board_range
@@ -365,7 +365,7 @@ def possible_normal_move(
         == "right direction"
     ):
         move_coords = xc - 1, yc + 1
-        distance = round(sqrt(2), 1)
+        distance = round(sqrt(2), 2)
     elif (
         yc + 1 in board_range
         and board[yc + 1][xc] == "-"
@@ -444,12 +444,7 @@ def end_phase(board: Board):
         direction = empty_winning_coords[-1]
     else:
         direction = empty_winning_coords[0]
-    counter_moves = move_distance(board, direction)
-    counter_moves_max = max_distances(counter_moves, color)
-    color = board.moving_player()
-    counter_coords, move_coords = the_best_move(
-        counter_moves_max, color, counters_not_winning
-    )
+    counter_coords, move_coords = move(board, direction, counters_not_winning)
     return counter_coords, move_coords
 
 
