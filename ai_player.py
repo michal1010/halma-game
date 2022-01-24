@@ -26,8 +26,8 @@ def move(board: Board, direction=None, counters_not_winning=None):
     coords of move that should be done.
     """
     counter_moves = move_distance(board, direction)
-    counter_moves_max = max_distances(counter_moves)
     color = board.moving_player()
+    counter_moves_max = max_distances(counter_moves, color)
     counter_coords, move_coords = the_best_move(
         counter_moves_max, color, counters_not_winning
     )
@@ -81,7 +81,6 @@ def jump_move_distances(board_object: Board, direction=None):
             direction=direction,
         )
         distances_dict[counter_coords] = distances.copy()
-        distances.clear()
         distance_coords.clear()
 
     return distances_dict
@@ -280,8 +279,15 @@ def jump_move_distances_valid(
             direction,
         )
 
+    if color == "black":
+        direction = (15, 15) if direction is None else direction
+    else:
+        direction = (0, 0) if direction is None else direction
+
     if last_counter_coords is not None and len(distance_coords) > 1:
-        max_distance = distance_made(distance_coords[0], distance_coords[-1])
+        max_distance = distance_made(
+            distance_coords[0], direction
+        ) - distance_made(distance_coords[-1], direction)
         move_coords = distance_coords[-1]
         distances[move_coords] = max_distance
     return distances
@@ -433,9 +439,13 @@ def end_phase(board: Board):
     coords of move that should be done in end phase of the game.
     """
     empty_winning_coords, counters_not_winning = finding_winning_coords(board)
-    direction = empty_winning_coords[-1]
+    color = board.moving_player()
+    if color == "white":
+        direction = empty_winning_coords[-1]
+    else:
+        direction = empty_winning_coords[0]
     counter_moves = move_distance(board, direction)
-    counter_moves_max = max_distances(counter_moves)
+    counter_moves_max = max_distances(counter_moves, color)
     color = board.moving_player()
     counter_coords, move_coords = the_best_move(
         counter_moves_max, color, counters_not_winning
@@ -480,7 +490,7 @@ def finding_counters(board: Board):
     return black_coords, white_coords
 
 
-def max_distances(distances_coords: dict):
+def max_distances(distances_coords: dict, color):
     """
     From dict in form
     {(xc, yc): {(xm, ym): distance made in this move}.
@@ -493,7 +503,11 @@ def max_distances(distances_coords: dict):
     max_distance = 0
     max_coords = None
     for counter_coords, move_values in distances_coords.items():
-        for move_coords, distance in move_values.items():
+        if color == "white":
+            reversed_move_values = list(move_values.items())[::-1]
+        else:
+            reversed_move_values = move_values.items()
+        for move_coords, distance in reversed_move_values:
             if distance > max_distance:
                 max_distance = distance
                 max_coords = move_coords
@@ -506,7 +520,7 @@ def max_distances(distances_coords: dict):
     return counters_moves
 
 
-def the_best_move(counter_coords_dict, color, counters_not_winning=None):
+def the_best_move(counter_coords_dict: dict, color, counters_not_winning=None):
     """
     Peaks from dict in form
     {xc, yc: {move_coords: (xm, ym), max_distance: distance}}
@@ -515,7 +529,6 @@ def the_best_move(counter_coords_dict, color, counters_not_winning=None):
     counter = (-1, -1)
     move = None
     distance = 0
-    # counters_not_winning = counter_coords_dict if counters_not_winning is None else counters_not_winning
 
     for counter_coords, move_values in counter_coords_dict.items():
         if (
@@ -547,7 +560,7 @@ def distance_made(counter_coords, move_coords):
     xm, ym = move_coords
     delta_x = xm - xc
     delta_y = ym - yc
-    distance = round(sqrt(delta_x ** 2 + delta_y ** 2), 1)
+    distance = round(sqrt(delta_x ** 2 + delta_y ** 2), 2)
     return distance
 
 
@@ -566,15 +579,11 @@ def right_direction(
         direction = (15, 15) if direction is None else direction
         current_distance = distance_made(counter_coords, direction)
         move_distance = distance_made(move_coords, direction)
-        if current_distance > move_distance:
-            return "right direction"
-        else:
-            return "wrong direction"
     elif player_color == "white":
         direction = (0, 0) if direction is None else direction
         current_distance = distance_made(counter_coords, direction)
         move_distance = distance_made(move_coords, direction)
-        if current_distance > move_distance:
-            return "right direction"
-        else:
-            return "wrong direction"
+    if current_distance > move_distance:
+        return "right direction"
+    else:
+        return "wrong direction"
