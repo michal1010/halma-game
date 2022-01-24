@@ -71,7 +71,7 @@ def game_mode():
 1. human vs human
 2. ai vs human
 3. ai vs ai
-Type the mode you want to select.\n"""
+Type 1, 2, or 3:\n"""
         mode = input(info)
         if mode != "1" and mode != "2" and mode != "3":
             print("You chosed invalid option.")
@@ -124,7 +124,6 @@ def ai_human_game(board: Board, player1_color):
         print_the_board(board)
         if ai is False:
             try:
-
                 counter_coords, move_coords = taking_user_coords()
                 board.move(counter_coords, move_coords)
             except UnboundLocalError and ValueError:
