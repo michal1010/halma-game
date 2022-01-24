@@ -1,4 +1,4 @@
-# b - black counter; w - white counter; o - blanck space
+# b - black counter; w - white counter; - - blanck space
 
 BLACK_WON_EXAMPLE = [
         ['-', 'w', 'w', 'w', 'w', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-'],

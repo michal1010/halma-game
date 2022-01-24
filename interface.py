@@ -82,7 +82,8 @@ def human_game(board: Board, player1_color):
     """
     Loop with human vs human game mode.
     """
-    while True:
+    end = False
+    while not end:
         moving_color = board.moving_player()
         player = who_is_which_player(moving_color, player1_color)
         print(f"{player} turn")
@@ -108,14 +109,14 @@ def human_game(board: Board, player1_color):
             print("Your move is invalid.\nTry again.")
             continue
 
-        if end_of_the_game(board, player1_color):
-            break
+        end = end_of_the_game(board, player1_color)
 
 
 def ai_human_game(board: Board, player1_color):
     "Ai vs human game mode."
     ai = who_is_ai_player(player1_color)
-    while True:
+    end = False
+    while not end:
         if board.moving_player() == player1_color:
             player = "Player1"
         else:
@@ -149,19 +150,17 @@ def ai_human_game(board: Board, player1_color):
                 continue
             ai = True
         else:
-            print("Ai turn")
             time.sleep(3)
             ai_turn(board)
             ai = False
 
-        if end_of_the_game(board, player1_color):
-            break
+        end = end_of_the_game(board, player1_color)
 
 
 def ai_game(board: Board, player1_color):
     "Ai vs ai game mode."
-    while True:
-        # board._board = BOARD_TEST
+    end = False
+    while not end:
         if board.moving_player() == player1_color:
             player = "Player1"
         else:
@@ -169,10 +168,9 @@ def ai_game(board: Board, player1_color):
         print(f"{player} turn")
         print_the_board(board)
         ai_turn(board)
-        time.sleep(3)
+        # time.sleep(0.4)
 
-        if end_of_the_game(board, player1_color):
-            break
+        end = end_of_the_game(board, player1_color)
 
 
 def main():

@@ -278,15 +278,9 @@ def possible_jump_move(
             direction,
         )
 
-    if color == "black":
-        direction = (15, 15) if direction is None else direction
-    else:
-        direction = (0, 0) if direction is None else direction
-
     if last_counter_coords is not None and len(distance_coords) > 1:
-        beggining_distance = distance_made(distance_coords[0], direction)
-        after_move_distance = distance_made(distance_coords[-1], direction)
-        max_distance = round(beggining_distance - after_move_distance, 2)
+        max_distance = round(distance_made(distance_coords[0],
+                                           distance_coords[-1]), 2)
         move_coords = distance_coords[-1]
         distances[move_coords] = max_distance
     return distances
@@ -321,11 +315,6 @@ def possible_normal_move(
     board = board_object.board()
     board_range = range(0, 16)
     color = board_object.moving_player()
-    if color == "black":
-        direction = (15, 15) if direction is None else direction
-    else:
-        direction = (0, 0) if direction is None else direction
-    distnaces = {}
 
     if (
         yc + 1 in board_range
