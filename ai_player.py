@@ -71,7 +71,7 @@ def jump_move_distances(board_object: Board, direction=None):
 
     for counter_coords in color_coords.keys():
         distances = {}
-        distances = jump_move_distances_valid(
+        distances = possible_jump_move(
             board_object,
             board,
             counter_coords,
@@ -85,7 +85,7 @@ def jump_move_distances(board_object: Board, direction=None):
     return distances_dict
 
 
-def jump_move_distances_valid(
+def possible_jump_move(
     board_object,
     board,
     counter_coords,
@@ -120,7 +120,7 @@ def jump_move_distances_valid(
             direction,
         )
     ):
-        distances = jump_move_distances_valid(
+        distances = possible_jump_move(
             board_object,
             board,
             (xc - 2, yc - 2),
@@ -139,7 +139,7 @@ def jump_move_distances_valid(
             board_object, counter_coords, (xc, yc - 2), color, direction
         )
     ):
-        distances = jump_move_distances_valid(
+        distances = possible_jump_move(
             board_object,
             board,
             (xc, yc - 2),
@@ -163,7 +163,7 @@ def jump_move_distances_valid(
             direction,
         )
     ):
-        distances = jump_move_distances_valid(
+        distances = possible_jump_move(
             board_object,
             board,
             (xc + 2, yc - 2),
@@ -182,7 +182,7 @@ def jump_move_distances_valid(
             board_object, counter_coords, (xc + 2, yc), color, direction
         )
     ):
-        distances = jump_move_distances_valid(
+        distances = possible_jump_move(
             board_object,
             board,
             (xc + 2, yc),
@@ -206,7 +206,7 @@ def jump_move_distances_valid(
             direction,
         )
     ):
-        distances = jump_move_distances_valid(
+        distances = possible_jump_move(
             board_object,
             board,
             (xc + 2, yc + 2),
@@ -225,7 +225,7 @@ def jump_move_distances_valid(
             board_object, counter_coords, (xc, yc + 2), color, direction
         )
     ):
-        distances = jump_move_distances_valid(
+        distances = possible_jump_move(
             board_object,
             board,
             (xc, yc + 2),
@@ -249,7 +249,7 @@ def jump_move_distances_valid(
             direction,
         )
     ):
-        distances = jump_move_distances_valid(
+        distances = possible_jump_move(
             board_object,
             board,
             (xc - 2, yc + 2),
@@ -268,7 +268,7 @@ def jump_move_distances_valid(
             board_object, counter_coords, (xc - 2, yc), color, direction
         )
     ):
-        distances = jump_move_distances_valid(
+        distances = possible_jump_move(
             board_object,
             board,
             (xc - 2, yc),
@@ -316,10 +316,16 @@ def possible_normal_move(
     Cheks possible normal move for given counter.
     Returns move_coords and made distance.
     """
+
     xc, yc = counter_coords
     board = board_object.board()
     board_range = range(0, 16)
     color = board_object.moving_player()
+    if color == "black":
+        direction = (15, 15) if direction is None else direction
+    else:
+        direction = (0, 0) if direction is None else direction
+    distnaces = {}
 
     if (
         yc + 1 in board_range
@@ -331,6 +337,7 @@ def possible_normal_move(
         == "right direction"
     ):
         move_coords = xc + 1, yc + 1
+
         distance = round(sqrt(2), 2)
     elif (
         yc - 1 in board_range
