@@ -169,7 +169,7 @@ def ai_game(board: Board, player1_color):
         print(f"{player} turn")
         print_the_board(board)
         ai_turn(board)
-        # time.sleep(1)
+        time.sleep(3)
 
         if end_of_the_game(board, player1_color):
             break
