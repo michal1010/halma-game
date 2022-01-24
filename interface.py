@@ -93,6 +93,7 @@ def human_game(board: Board, player1_color):
             board.move(counter_coords, move_coords)
         except UnboundLocalError and ValueError:
             print("Coord must be an integer nubmer. Try again\t")
+            continue
         except InvalidCounterCoord:
             print("You typed invalid counter coords.\nTry again.")
             continue
@@ -129,6 +130,7 @@ def ai_human_game(board: Board, player1_color):
                 board.move(counter_coords, move_coords)
             except UnboundLocalError and ValueError:
                 print("Coord must be an integer nubmer. Try again\t")
+                continue
             except InvalidCounterCoord:
                 print("You typed invalid counter coords.\nTry again.")
                 continue
@@ -168,7 +170,7 @@ def ai_game(board: Board, player1_color):
         print(f"{player} turn")
         print_the_board(board)
         ai_turn(board)
-        # time.sleep(0.4)
+        time.sleep(3)
 
         end = end_of_the_game(board, player1_color)
 
