@@ -217,7 +217,7 @@ def jump_move_distances(board_object: Board, direction=None):
         color_coords = black_coords
     elif color == "white":
         color_coords = white_coords
-
+    # sfjlkdsajfasl;d
     distances_dict = {}
 
     for counter_coords in color_coords.keys():
