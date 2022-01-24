@@ -1,4 +1,3 @@
-import imp
 from aplication_logic import (
     AnotherCounterOnTheSquareError, Board,
     IndexOutOfBoardError, InvalidCounterCoord,
@@ -34,6 +33,7 @@ def end_of_the_game(board: Board, player1_color):
         winner_color = board.who_is_the_winner()
         winner = 'Player1' if winner_color == player1_color else 'Player2'
         print(f'{winner} has won the game.')
+        print_the_board(board)
         return True
     else:
         return False
@@ -130,7 +130,7 @@ def ai_game(board: Board, player1_color):
         print(f'{player} turn')
         print_the_board(board)
         ai_turn(board)
-        time.sleep(1)
+        time.sleep(3)
         # try:
         #     counter_coords, moai ve_coords = taking_user_coords()
         #     board.move(counter_coords, move_coords)

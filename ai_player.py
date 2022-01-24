@@ -72,7 +72,7 @@ def begin_end_phase(move_coords, counter_coords, board: Board):
         else:
             board.end_phase_w = True
     if board.end_phase_w and color == 'white':
-        coutner_coords, move_coords = end_phase(board)
+        counter_coords, move_coords = end_phase(board)
     elif board.end_phase_b and color == 'black':
         counter_coords, move_coords = end_phase(board)
     return counter_coords, move_coords
@@ -99,7 +99,7 @@ def end_phase(board: Board):
     counter_moves = move_distance(board, direction)
     counter_moves_max = max_distances(counter_moves)
     color = board.moving_player()
-    counter_coords, move_coords = the_best_move(counter_moves_max, color)
+    counter_coords, move_coords = the_best_move(counter_moves_max, color, conuters_not_winning)
     return counter_coords, move_coords
 
 
@@ -346,29 +346,39 @@ def max_distances(distances_coords: dict):
     return counters_moves
 
 
-def the_best_move(counter_coords, color):
+def the_best_move(counter_coords_dict, color, counters_not_winning=None):
     '''
     Peaks from dict in form
     {xc, yc: {move_coords: (xm, ym), max_distance: distance}}
     pair of key and move_coords value with the biggest max_distance.
     '''
-    counter = (0, 0)
+    counter = (-1, -1)
     move = None
     distance = 0
+    # counters_not_winning = counter_coords_dict if counters_not_winning is None else counters_not_winning
 
-    for counter_coords, move_values in counter_coords.items():
-        if color == 'black':
-            direction_condition = False
-        elif color == 'white':
-            direction_condition = sum(counter_coords) > sum(counter)
-        if (
-            distance < move_values['max_distance'] or
-            (distance == move_values['max_distance'] and
-             direction_condition)
-        ):
-            distance = move_values['max_distance']
-            counter = counter_coords
-            move = move_values['move_coords']
+    for counter_coords, move_values in counter_coords_dict.items():
+        if counters_not_winning is None or counter_coords in counters_not_winning:
+            x1, y1 = counter_coords
+            x2, y2 = counter
+            if color == 'black':
+                direction_condition = (
+                    sum(counter_coords) < sum(counter) or
+                    (sum(counter_coords) == sum(counter) and x1 > x2)
+                )
+            elif color == 'white':
+                direction_condition = (
+                    sum(counter_coords) > sum(counter) or
+                    (sum(counter_coords) == sum(counter) and x1 < x2)
+                )
+            if (
+                distance < move_values['max_distance'] or
+                (distance == move_values['max_distance'] and
+                    direction_condition)
+            ):
+                distance = move_values['max_distance']
+                counter = counter_coords
+                move = move_values['move_coords']
     return counter, move
 
 
