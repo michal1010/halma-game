@@ -1,26 +1,13 @@
 from random import choice
 from constants import BOARD_END, BOARD_START
 import copy
-
-
-class InvalidCounterCoord(Exception):
-    pass
-
-
-class NotMovedError(Exception):
-    pass
-
-
-class IndexOutOfBoardError(Exception):
-    pass
-
-
-class AnotherCounterOnTheSquareError(Exception):
-    pass
-
-
-class InvalidMoveError(Exception):
-    pass
+from execptions import (
+    AnotherCounterOnTheSquareError,
+    IndexOutOfBoardError,
+    NotMovedError,
+    InvalidCounterCoord,
+    InvalidMoveError,
+)
 
 
 class Board:
@@ -31,7 +18,6 @@ class Board:
 
     def __init__(self) -> None:
         self._moving_player = self.who_starts_the_play()
-        # I am not sure if it is the best solution
         self._board = copy.deepcopy(BOARD_START)
         self._moves_made = 0
         self._turn_number = 0

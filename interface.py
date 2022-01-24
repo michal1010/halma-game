@@ -1,11 +1,11 @@
-from aplication_logic import (
+from execptions import (
     AnotherCounterOnTheSquareError,
-    Board,
     IndexOutOfBoardError,
     InvalidCounterCoord,
     InvalidMoveError,
     NotMovedError,
 )
+from aplication_logic import Board
 from ai_player import ai_turn
 import time
 
@@ -170,7 +170,7 @@ def ai_game(board: Board, player1_color):
         print(f"{player} turn")
         print_the_board(board)
         ai_turn(board)
-        time.sleep(1)
+        # time.sleep(1)
 
         if end_of_the_game(board, player1_color):
             break
